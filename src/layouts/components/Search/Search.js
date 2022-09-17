@@ -16,10 +16,10 @@ const cx = classNames.bind(styles);
 function Search() {
     const [searchValue, setSearchValue] = useState('');
     const [searchResult, setSearchResult] = useState([]);
-    const [showResult, setShowResult] = useState(true);
+    const [showResult, setShowResult] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const debounce = useDebounce(searchValue, 500);
+    const debounceValue = useDebounce(searchValue, 500);
 
     const inputRef = useRef();
 
@@ -31,7 +31,7 @@ function Search() {
 
         const fetchApi = async () => {
             setLoading(true);
-            const results = await searchServices.search(debounce);
+            const results = await searchServices.search(debounceValue);
 
             setSearchResult(results);
             setLoading(false);
@@ -39,7 +39,7 @@ function Search() {
         fetchApi();
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [debounce]);
+    }, [debounceValue]);
 
     const handleClear = () => {
         setSearchValue('');
@@ -68,7 +68,7 @@ function Search() {
                         <PopperWrapper>
                             <h4 className={cx('search-title')}>Accounts</h4>
                             {searchResult.map((result) => (
-                                <AccountItem key={result.id} data={result} />
+                                <AccountItem key={result.id} data={result} setSearchResult />
                             ))}
                         </PopperWrapper>
                     </div>
